@@ -1,0 +1,6 @@
+---
+- name: Clones a snapshot
+  snapshot: action=clone
+           snapname= {{ snapname }}
+           clonename= {{ clonename }}
+           force= "{{ force }}"
