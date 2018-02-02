@@ -1,14 +1,6 @@
 # For Python 2 / 3 compatability
 from __future__ import print_function
 
-# Toy dataset.
-# Format: each row is an example.
-# The last column is the label.
-# The first two columns are features.
-# Feel free to play with it by adding more features & examples.
-# Interesting note: I've written this so the 2nd and 5th examples
-# have the same features, but different labels - so we can see how the
-# tree handles this case.
 training_data = [
     ['Green', 3, 'Apple'],
     ['Yellow', 3, 'Apple'],
@@ -17,20 +9,15 @@ training_data = [
     ['Yellow', 3, 'Lemon'],
 ]
 
-# Column labels.
-# These are used only to print the tree.
 header = ["color", "diameter", "label"]
-
 
 def unique_vals(rows, col):
     """Find the unique values for a column in a dataset."""
     return set([row[col] for row in rows])
 
-#######
 # Demo:
 # unique_vals(training_data, 0)
 # unique_vals(training_data, 1)
-#######
 
 
 def class_counts(rows):
@@ -44,21 +31,15 @@ def class_counts(rows):
         counts[label] += 1
     return counts
 
-#######
 # Demo:
 # class_counts(training_data)
-#######
-
 
 def is_numeric(value):
-    """Test if a value is numeric."""
     return isinstance(value, int) or isinstance(value, float)
 
-#######
 # Demo:
 # is_numeric(7)
 # is_numeric("Red")
-#######
 
 
 class Question:
@@ -75,8 +56,6 @@ class Question:
         self.value = value
 
     def match(self, example):
-        # Compare the feature value in an example to the
-        # feature value in this question.
         val = example[self.column]
         if is_numeric(val):
             return val >= self.value
@@ -84,15 +63,12 @@ class Question:
             return val == self.value
 
     def __repr__(self):
-        # This is just a helper method to print
-        # the question in a readable format.
         condition = "=="
         if is_numeric(self.value):
             condition = ">="
         return "Is %s %s %s?" % (
             header[self.column], condition, str(self.value))
 
-#######
 # Demo:
 # Let's write a question for a numeric attribute
 # Question(1, 3)
@@ -102,8 +78,6 @@ class Question:
 # example = training_data[0]
 # ... and see if it matches the question
 # q.match(example)
-#######
-
 
 def partition(rows, question):
     """Partitions a dataset.
@@ -119,8 +93,6 @@ def partition(rows, question):
             false_rows.append(row)
     return true_rows, false_rows
 
-
-#######
 # Demo:
 # Let's partition the training data based on whether rows are Red.
 # true_rows, false_rows = partition(training_data, Question(0, 'Red'))
@@ -128,7 +100,6 @@ def partition(rows, question):
 # true_rows
 # This will contain everything else.
 # false_rows
-#######
 
 def gini(rows):
     """Calculate the Gini Impurity for a list of rows.
@@ -144,11 +115,7 @@ def gini(rows):
         impurity -= prob_of_lbl**2
     return impurity
 
-
-#######
 # Demo:
-# Let's look at some example to understand how Gini Impurity works.
-#
 # First, we'll look at a dataset with no mixing.
 # no_mixing = [['Apple'],
 #              ['Apple']]
@@ -169,19 +136,10 @@ def gini(rows):
 #                  ['Grapefruit'],
 #                  ['Blueberry']]
 # This will return 0.8
-# gini(lots_of_mixing)
-#######
-
+# gini(
 def info_gain(left, right, current_uncertainty):
-    """Information Gain.
-
-    The uncertainty of the starting node, minus the weighted impurity of
-    two child nodes.
-    """
     p = float(len(left)) / (len(left) + len(right))
     return current_uncertainty - p * gini(left) - (1 - p) * gini(right)
-
-#######
 # Demo:
 # Calculate the uncertainy of our training data.
 # current_uncertainty = gini(training_data)
@@ -251,13 +209,11 @@ def find_best_split(rows):
 
     return best_gain, best_question
 
-#######
 # Demo:
 # Find the best question to ask first for our toy dataset.
 # best_gain, best_question = find_best_split(training_data)
 # FYI: is color == Red is just as good. See the note in the code above
 # where I used '>='.
-#######
 
 class Leaf:
     """A Leaf node classifies data.
